@@ -1,3 +1,5 @@
+import 'package:crud/models/user.dart';
+import 'package:crud/providers/user_provider.dart';
 import 'package:crud/widgets/field_form.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,19 @@ class _UserFormState extends State<UserForm> {
 
   @override
   Widget build(BuildContext context) {
+    void save() {
+      UserProvider userProvider = UserProvider.of(context) as UserProvider;
+
+      User user = User(
+          name: controllerName.text,
+          email: controllerEmail.text,
+          password: controllerPassword.text);
+
+      userProvider.users.insert(0, user);
+
+      print(userProvider.users[0].name);
+    }
+
     return Center(
       child: Column(
         children: [
@@ -29,7 +44,7 @@ class _UserFormState extends State<UserForm> {
           SizedBox(
             width: double.infinity,
             child: TextButton(
-              onPressed: () {},
+              onPressed: save,
               style: ButtonStyle(
                   backgroundColor:
                       MaterialStateProperty.all(Theme.of(context).primaryColor),

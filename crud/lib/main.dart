@@ -1,5 +1,6 @@
 import 'package:crud/providers/user_provider.dart';
 import 'package:crud/screens/home_screen.dart';
+import 'package:crud/widgets/user_form.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,10 +13,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return UserProvider(
-      child: const MaterialApp(
+      child: MaterialApp(
         title: 'Estudo CRUD',
-        home: HomeScreen(),
-        routes: {},
+        home: const HomeScreen(),
+        routes: {"/create": (_) => const UserForm()},
       ),
     );
   }
