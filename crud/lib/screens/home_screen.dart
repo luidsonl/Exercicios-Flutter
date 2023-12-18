@@ -1,4 +1,5 @@
 // lib/screens/home_screen.dart
+import 'package:crud/widgets/user_form.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Home Screen'),
       ),
       body: const Center(
-        child: Text('Bem-vindo à tela principal!'),
+        child: UserForm(),
       ),
     );
   }

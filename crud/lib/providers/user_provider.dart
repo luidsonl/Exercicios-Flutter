@@ -16,7 +16,7 @@ class UserProvider extends InheritedWidget {
   }
 
   @override
-  bool updateShouldNotify(UserProvider widget) {
+  bool updateShouldNotify(UserProvider oldWidget) {
     return true;
   }
 }
