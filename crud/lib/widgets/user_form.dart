@@ -25,9 +25,13 @@ class _UserFormState extends State<UserForm> {
           email: controllerEmail.text,
           password: controllerPassword.text);
 
-      userProvider.users.insert(0, user);
+      userProvider.users.insert(userProvider.users.length, user);
 
-      print(userProvider.users[0].name);
+      controllerName.clear();
+      controllerEmail.clear();
+      controllerPassword.clear();
+
+      Navigator.pushNamed(context, '/list');
     }
 
     return Center(

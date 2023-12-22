@@ -1,6 +1,6 @@
 import 'package:crud/providers/user_provider.dart';
 import 'package:crud/screens/home_screen.dart';
-import 'package:crud/widgets/user_form.dart';
+import 'package:crud/screens/user_list_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +16,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Estudo CRUD',
         home: const HomeScreen(),
-        routes: {"/create": (_) => const UserForm()},
+        routes: {
+          "/create": (_) => const HomeScreen(),
+          "/list": (_) => const UserListScreen(),
+        },
       ),
     );
   }
