@@ -1,5 +1,6 @@
 import 'package:crud/providers/user_provider.dart';
-import 'package:crud/screens/home_screen.dart';
+import 'package:crud/screens/create_user_screen.dart';
+import 'package:crud/screens/edit_user_screen.dart';
 import 'package:crud/screens/user_list_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,10 +16,11 @@ class MyApp extends StatelessWidget {
     return UserProvider(
       child: MaterialApp(
         title: 'Estudo CRUD',
-        home: const HomeScreen(),
+        home: const CreateUserScreen(),
         routes: {
-          "/create": (_) => const HomeScreen(),
+          "/create": (_) => const CreateUserScreen(),
           "/list": (_) => const UserListScreen(),
+          "/edit": (_) => const EditUserScreen(),
         },
       ),
     );

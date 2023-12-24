@@ -17,21 +17,45 @@ class _UserFormState extends State<UserForm> {
 
   @override
   Widget build(BuildContext context) {
+    UserProvider userProvider = UserProvider.of(context) as UserProvider;
+
+    final toEdit = userProvider.selectedUser != null;
+
+    if (toEdit) {
+      controllerName.text = userProvider.selectedUser!.name;
+      controllerEmail.text = userProvider.selectedUser!.email;
+      controllerPassword.text = userProvider.selectedUser!.password;
+    }
+
     void save() {
-      UserProvider userProvider = UserProvider.of(context) as UserProvider;
+      User? user;
 
-      User user = User(
-          name: controllerName.text,
-          email: controllerEmail.text,
-          password: controllerPassword.text);
+      if (!toEdit) {
+        user = User.autoIncrement(
+            name: controllerName.text,
+            email: controllerEmail.text,
+            password: controllerPassword.text);
+        userProvider.users.insert(user.id - 1, user);
+      } else {
+        user = User(
+            id: userProvider.selectedUser!.id,
+            name: controllerName.text,
+            email: controllerEmail.text,
+            password: controllerPassword.text);
 
-      userProvider.users.insert(userProvider.users.length, user);
+        userProvider.users[user.id - 1] = user;
+      }
 
       controllerName.clear();
       controllerEmail.clear();
       controllerPassword.clear();
 
-      Navigator.pushNamed(context, '/list');
+      userProvider.selectedUser = null;
+      if (toEdit) {
+        Navigator.pop(context);
+      } else {
+        Navigator.pushNamed(context, '/list');
+      }
     }
 
     return Center(

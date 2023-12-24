@@ -17,6 +17,17 @@ class UserList extends StatelessWidget {
                   border: Border(bottom: BorderSide(width: 0.3))),
               child: ListTile(
                 title: Text(users[indexBuilder].name),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          userProvider.selectedUser = users[indexBuilder];
+                          Navigator.pushNamed(context, '/edit');
+                        },
+                        icon: const Icon(Icons.edit))
+                  ],
+                ),
               ),
             ));
   }

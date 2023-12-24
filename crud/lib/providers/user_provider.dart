@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class UserProvider extends InheritedWidget {
   @override
   final Widget child;
-  final List<User> users = [];
+  List<User> users = [];
+  User? selectedUser;
 
   UserProvider({
     super.key,
