@@ -1,3 +1,4 @@
+import 'package:crud/models/form_action.dart';
 import 'package:crud/models/user.dart';
 import 'package:flutter/material.dart';
 
@@ -5,7 +6,7 @@ class UserProvider extends InheritedWidget {
   @override
   final Widget child;
   List<User> users = [];
-  User? selectedUser;
+  FormAction formAction = FormAction(selectedUserId: -1, actionName: 'create');
 
   UserProvider({
     super.key,

@@ -9,11 +9,14 @@ class UserListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('User List'),
-        leading: BackButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
+        actions: [
+          TextButton(
+              style: TextButton.styleFrom(foregroundColor: Colors.white),
+              onPressed: () {
+                Navigator.popAndPushNamed(context, '/create');
+              },
+              child: const Text('New User')),
+        ],
       ),
       body: const Center(
         child: UserList(),

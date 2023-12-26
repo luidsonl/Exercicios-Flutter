@@ -1,3 +1,4 @@
+import 'package:crud/models/form_action.dart';
 import 'package:crud/models/user.dart';
 import 'package:crud/providers/user_provider.dart';
 import 'package:crud/widgets/field_form.dart';
@@ -19,43 +20,45 @@ class _UserFormState extends State<UserForm> {
   Widget build(BuildContext context) {
     UserProvider userProvider = UserProvider.of(context) as UserProvider;
 
-    final toEdit = userProvider.selectedUser != null;
+    String action = userProvider.formAction.actionName;
+    int? selectedUserId = userProvider.formAction.selectedUserId;
+    final users = userProvider.users;
 
-    if (toEdit) {
-      controllerName.text = userProvider.selectedUser!.name;
-      controllerEmail.text = userProvider.selectedUser!.email;
-      controllerPassword.text = userProvider.selectedUser!.password;
+    userProvider.formAction.actionName = 'create';
+
+    User? selectedUser = users.firstWhere(
+      (user) => user.id == selectedUserId,
+      orElse: () => User(id: -1, name: '', email: '', password: ''),
+    );
+
+    if (action == 'edit') {
+      controllerName.text = selectedUser.name;
+      controllerEmail.text = selectedUser.email;
+      controllerPassword.text = selectedUser.password;
     }
 
     void save() {
       User? user;
-
-      if (!toEdit) {
-        user = User.autoIncrement(
-            name: controllerName.text,
-            email: controllerEmail.text,
-            password: controllerPassword.text);
-        userProvider.users.insert(user.id - 1, user);
-      } else {
-        user = User(
-            id: userProvider.selectedUser!.id,
-            name: controllerName.text,
-            email: controllerEmail.text,
-            password: controllerPassword.text);
-
-        userProvider.users[user.id - 1] = user;
+      switch (action) {
+        case 'create':
+          user = User.autoIncrement(
+              name: controllerName.text,
+              email: controllerEmail.text,
+              password: controllerPassword.text);
+          userProvider.users.add(user);
+          break;
+        case 'edit':
+          selectedUser.name = controllerName.text;
+          selectedUser.email = controllerEmail.text;
+          selectedUser.password = controllerPassword.text;
+          break;
       }
 
       controllerName.clear();
       controllerEmail.clear();
       controllerPassword.clear();
 
-      userProvider.selectedUser = null;
-      if (toEdit) {
-        Navigator.pop(context);
-      } else {
-        Navigator.pushNamed(context, '/list');
-      }
+      Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     }
 
     return Center(

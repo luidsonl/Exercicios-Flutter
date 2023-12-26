@@ -1,3 +1,4 @@
+import 'package:crud/models/form_action.dart';
 import 'package:crud/models/user.dart';
 import 'package:crud/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -15,18 +16,27 @@ class UserList extends StatelessWidget {
         itemBuilder: (BuildContext contextBuilder, indexBuilder) => Container(
               decoration: const BoxDecoration(
                   border: Border(bottom: BorderSide(width: 0.3))),
-              child: ListTile(
-                title: Text(users[indexBuilder].name),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          userProvider.selectedUser = users[indexBuilder];
-                          Navigator.pushNamed(context, '/edit');
-                        },
-                        icon: const Icon(Icons.edit))
-                  ],
+              child: GestureDetector(
+                onTap: () {
+                  userProvider.formAction.selectedUserId =
+                      users[indexBuilder].id;
+                  Navigator.pushNamed(context, '/user_info');
+                },
+                child: ListTile(
+                  title: Text(users[indexBuilder].name),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            userProvider.formAction = FormAction(
+                                selectedUserId: users[indexBuilder].id,
+                                actionName: 'edit');
+                            Navigator.pushNamed(context, '/edit');
+                          },
+                          icon: const Icon(Icons.edit))
+                    ],
+                  ),
                 ),
               ),
             ));

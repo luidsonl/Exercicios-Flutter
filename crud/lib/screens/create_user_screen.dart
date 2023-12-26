@@ -10,14 +10,12 @@ class CreateUserScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create User'),
-        actions: [
-          TextButton(
-              style: TextButton.styleFrom(foregroundColor: Colors.white),
-              onPressed: () {
-                Navigator.pushNamed(context, '/list');
-              },
-              child: const Text('User List')),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Esta linha volta para a tela anterior
+          },
+        ),
       ),
       body: const Center(
         child: UserForm(),
