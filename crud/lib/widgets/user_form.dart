@@ -37,7 +37,17 @@ class _UserFormState extends State<UserForm> {
       controllerPassword.text = selectedUser.password;
     }
 
+    GlobalKey<FormState> key = GlobalKey();
+
     void save() {
+      final isValid = key.currentState?.validate();
+
+      if (isValid == false) {
+        return;
+      }
+
+      key.currentState?.save();
+
       User? user;
       switch (action) {
         case 'create':
@@ -62,28 +72,35 @@ class _UserFormState extends State<UserForm> {
     }
 
     return Center(
-      child: Column(
-        children: [
-          FieldForm(
-              label: 'Name', isPassword: false, controller: controllerName),
-          FieldForm(
-              label: 'Email', isPassword: false, controller: controllerEmail),
-          FieldForm(
-              label: 'Password',
-              isPassword: true,
-              controller: controllerPassword),
-          SizedBox(
-            width: double.infinity,
-            child: TextButton(
-              onPressed: save,
-              style: ButtonStyle(
-                  backgroundColor:
-                      MaterialStateProperty.all(Theme.of(context).primaryColor),
-                  foregroundColor: MaterialStateProperty.all(Colors.white)),
-              child: const Text('Salvar'),
+      child: Form(
+        key: key,
+        child: Column(
+          children: [
+            FieldForm(
+                label: 'Name', isPassword: false, controller: controllerName),
+            FieldForm(
+              label: 'Email',
+              isPassword: false,
+              controller: controllerEmail,
+              isEmail: true,
             ),
-          )
-        ],
+            FieldForm(
+                label: 'Password',
+                isPassword: true,
+                controller: controllerPassword),
+            SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: save,
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).primaryColor),
+                    foregroundColor: MaterialStateProperty.all(Colors.white)),
+                child: const Text('Salvar'),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

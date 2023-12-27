@@ -1,4 +1,5 @@
 // lib/screens/home_screen.dart
+import 'package:crud/widgets/container_all.dart';
 import 'package:crud/widgets/user_form.dart';
 import 'package:flutter/material.dart';
 
@@ -17,8 +18,8 @@ class CreateUserScreen extends StatelessWidget {
           },
         ),
       ),
-      body: const Center(
-        child: UserForm(),
+      body: ContainerAll(
+        child: const UserForm(),
       ),
     );
   }

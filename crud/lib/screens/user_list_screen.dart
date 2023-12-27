@@ -1,3 +1,4 @@
+import 'package:crud/widgets/container_all.dart';
 import 'package:crud/widgets/user_list.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +19,8 @@ class UserListScreen extends StatelessWidget {
               child: const Text('New User')),
         ],
       ),
-      body: const Center(
-        child: UserList(),
+      body: ContainerAll(
+        child: const UserList(),
       ),
     );
   }

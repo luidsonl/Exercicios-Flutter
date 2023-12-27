@@ -14,6 +14,11 @@ class DeleteButton extends StatelessWidget {
       Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
     }
 
-    return IconButton(onPressed: delete, icon: const Icon(Icons.delete));
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(onPressed: delete, icon: const Icon(Icons.delete)),
+      ],
+    );
   }
 }
