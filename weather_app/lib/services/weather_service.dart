@@ -1,19 +1,18 @@
 import 'dart:convert';
 
-import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:weather_app/models/forecast_model.dart';
 import 'package:weather_app/models/weather_model.dart';
 
 class WeatherService {
-  static const baseUrl = 'https://api.openweathermap.org/data/2.5/weather';
   final String apiKey;
 
   WeatherService(this.apiKey);
 
-  Future<Weather> getCurrentWeather(String cityName) async {
-    final response = await http
-        .get(Uri.parse('$baseUrl?q=$cityName&appId=$apiKey&units=metric'));
+  Future<Weather> getCurrentWeather(double lat, double lon) async {
+    final response = await http.get(Uri.parse(
+        'https://api.openweathermap.org/data/2.5/weather?lat=$lat&lon=$lon&appid=$apiKey&units=metric&lang=pt_br'));
 
     if (response.statusCode == 200) {
       return Weather.fromJson(jsonDecode(response.body));
@@ -22,7 +21,17 @@ class WeatherService {
     }
   }
 
-  Future<String> getCurrentCity() async {
+  Future<Forecast> getWeatherForecast(double lat, double lon) async {
+    final response = await http.get(Uri.parse(
+        'https://api.openweathermap.org/data/2.5/forecast?lat=$lat&lon=$lon&appid=$apiKey&units=metric&lang=pt_br'));
+    if (response.statusCode == 200) {
+      return Forecast.fromJsonList(jsonDecode(response.body)['list']);
+    } else {
+      throw Exception('Falha ao carregar dados');
+    }
+  }
+
+  Future<Position> getCurrentPosition() async {
     //checa permissão e pede a permissão para o usuário
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -33,13 +42,6 @@ class WeatherService {
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
 
-    //converte a localização para uma lista de objetos placemark
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(position.latitude, position.longitude);
-
-    //extrai o nome da cidade do primeiro objeto placemark
-    String? city = placemarks[0].locality;
-
-    return city ?? "";
+    return position;
   }
 }
