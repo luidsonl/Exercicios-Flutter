@@ -15,5 +15,5 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
-# Environment
-To set your environment rename the file lib/example.env.dart to lib/env.dart and set your Open Weather's Api key
+## Como configurar a api do open weather:
+Renomeie o arquivo lib/example.env.dart para env.dart e insira sua chave no campo indicado
