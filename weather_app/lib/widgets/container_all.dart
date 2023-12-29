@@ -6,14 +6,17 @@ class ContainerAll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.all(15),
-        padding: const EdgeInsets.all(15),
-        decoration: BoxDecoration(
-            color: const Color.fromRGBO(255, 255, 255, 0.5),
-            borderRadius: BorderRadius.circular(20)),
-        child: child,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: SingleChildScrollView(
+        child: Container(
+          margin: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+              color: const Color.fromRGBO(255, 255, 255, 0.5),
+              borderRadius: BorderRadius.circular(20)),
+          child: child,
+        ),
       ),
     );
   }

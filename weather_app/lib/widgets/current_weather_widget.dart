@@ -10,22 +10,29 @@ class CurrentWeatherWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(children: [
-        iconUrl != null
-            ? Image.network(
-                iconUrl,
-                width: 200,
-                height: 200,
-              )
-            : Image.asset(
-                'assets/loading.png',
-                width: 50,
-                height: 50,
-              ),
-        Text('${temperature?.round().toString()}°C'),
-        Text(description ?? "Carregando ..."),
-      ]),
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Center(
+        child: Column(children: [
+          iconUrl != null
+              ? Image.network(
+                  iconUrl,
+                  width: 200,
+                  height: 200,
+                )
+              : Image.asset(
+                  'assets/loading.png',
+                  width: 200,
+                  height: 200,
+                ),
+          Text(
+            '${temperature?.round().toString()}°C',
+            style: const TextStyle(fontSize: 30.0),
+          ),
+          Text(description ?? "Carregando ...",
+              style: const TextStyle(fontSize: 20.0)),
+        ]),
+      ),
     );
   }
 }

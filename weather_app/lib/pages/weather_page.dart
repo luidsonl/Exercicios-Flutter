@@ -7,6 +7,7 @@ import 'package:weather_app/services/weather_service.dart';
 import 'package:weather_app/widgets/city_name.dart';
 import 'package:weather_app/widgets/container_all.dart';
 import 'package:weather_app/widgets/current_weather_widget.dart';
+import 'package:weather_app/widgets/forecast_list_widget.dart';
 
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
@@ -67,6 +68,8 @@ class _WeatherPageState extends State<WeatherPage> {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> myList = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Previsão do tempo'),
@@ -75,15 +78,18 @@ class _WeatherPageState extends State<WeatherPage> {
           child: Column(
             children: [
               _showWeather
-                  ? CityName(
-                      cityName: _currentWeather?.cityName,
-                    )
-                  : Container(),
-              _showWeather
-                  ? CurrentWeatherWidget(
-                      temperature: _currentWeather?.temperature,
-                      description: _currentWeather?.description,
-                      iconUrl: _currentWeather?.iconUrl,
+                  ? Column(
+                      children: [
+                        CityName(
+                          cityName: _currentWeather?.cityName,
+                        ),
+                        CurrentWeatherWidget(
+                          temperature: _currentWeather?.temperature,
+                          description: _currentWeather?.description,
+                          iconUrl: _currentWeather?.iconUrl,
+                        ),
+                        ForecastListWidget(forecast: _weatherForecast)
+                      ],
                     )
                   : Container(),
               TextButton(
