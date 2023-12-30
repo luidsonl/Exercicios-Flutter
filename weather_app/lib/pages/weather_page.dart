@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:weather_app/env.dart';
+import 'package:weather_app/models/coordinates_model.dart';
 import 'package:weather_app/models/forecast_model.dart';
 import 'package:weather_app/models/weather_model.dart';
 import 'package:weather_app/services/weather_service.dart';
 import 'package:weather_app/widgets/city_name.dart';
+import 'package:weather_app/widgets/city_search_form.dart';
 import 'package:weather_app/widgets/container_all.dart';
 import 'package:weather_app/widgets/current_weather_widget.dart';
 import 'package:weather_app/widgets/forecast_list_widget.dart';
@@ -17,22 +19,38 @@ class WeatherPage extends StatefulWidget {
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  //Api key
   final WeatherService _weatherService = WeatherService(Env().apiKey);
 
-  //Fetch weather
   Weather? _currentWeather;
   Forecast? _weatherForecast;
   bool _showWeather = false;
+  Coordinates? location;
+
+  _updateCurrentLocation() async {
+    final Position currentPosition = await _weatherService.getCurrentPosition();
+
+    setState(() {
+      location = Coordinates(
+          lat: currentPosition.latitude, lon: currentPosition.longitude);
+    });
+    _fecthWeather();
+  }
+
+  _updateCityLocation(city) async {
+    final Coordinates cityLocation = await _weatherService.getCityBySearch(
+        cityName: city, apiKey: Env().apiKey);
+
+    setState(() {
+      location = cityLocation;
+    });
+
+    _fecthWeather();
+  }
 
   _fecthWeather() async {
-    //pegar a cidade atual
-    final Position currentPosition = await _weatherService.getCurrentPosition();
-    //pegar o clima
-
     try {
-      final Weather currentWeather = await _weatherService.getCurrentWeather(
-          currentPosition.latitude, currentPosition.longitude);
+      final Weather currentWeather =
+          await _weatherService.getCurrentWeather(location!.lat, location!.lon);
 
       setState(() {
         _currentWeather = currentWeather;
@@ -42,7 +60,7 @@ class _WeatherPageState extends State<WeatherPage> {
     }
     try {
       final Forecast weatherForecast = await _weatherService.getWeatherForecast(
-          currentPosition.latitude, currentPosition.longitude);
+          location!.lat, location!.lon);
 
       setState(() {
         _weatherForecast = weatherForecast;
@@ -56,20 +74,27 @@ class _WeatherPageState extends State<WeatherPage> {
   @override
   void initState() {
     super.initState();
+    _initLocalWeather();
   }
 
-  //Ação do botão
-  void updateLocalWeather() {
+  //Atualiza o clima do local atual
+  void _initLocalWeather() {
     setState(() {
       _showWeather = true;
     });
-    _fecthWeather();
+    _updateCurrentLocation();
+  }
+
+  //Atualiza o clima do local atual
+  void _searchCityWeather(city) {
+    setState(() {
+      _showWeather = true;
+    });
+    _updateCityLocation(city);
   }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> myList = ['Item 1', 'Item 2', 'Item 3', 'Item 4'];
-
     return Scaffold(
         appBar: AppBar(
           title: const Text('Previsão do tempo'),
@@ -80,6 +105,11 @@ class _WeatherPageState extends State<WeatherPage> {
               _showWeather
                   ? Column(
                       children: [
+                        CitySearchForm(
+                          onSearch: (String value) {
+                            _searchCityWeather(value);
+                          },
+                        ),
                         CityName(
                           cityName: _currentWeather?.cityName,
                         ),
@@ -92,9 +122,6 @@ class _WeatherPageState extends State<WeatherPage> {
                       ],
                     )
                   : Container(),
-              TextButton(
-                  onPressed: updateLocalWeather,
-                  child: const Text('Pegar clima local'))
             ],
           ),
         ));

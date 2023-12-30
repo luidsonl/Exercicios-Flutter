@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:weather_app/models/coordinates_model.dart';
 import 'package:weather_app/models/forecast_model.dart';
 import 'package:weather_app/models/weather_model.dart';
 
@@ -43,5 +44,20 @@ class WeatherService {
         desiredAccuracy: LocationAccuracy.high);
 
     return position;
+  }
+
+  Future<Coordinates> getCityBySearch(
+      {required cityName, required apiKey}) async {
+    final response = await http.get(Uri.parse(
+        'http://api.openweathermap.org/geo/1.0/direct?q=$cityName,br&appid=$apiKey'));
+    if (response.statusCode == 200) {
+      final Coordinates location = Coordinates(
+          lat: jsonDecode(response.body)[0]['lat'],
+          lon: jsonDecode(response.body)[0]['lon']);
+
+      return location;
+    } else {
+      throw Exception('Falha ao carregar dados');
+    }
   }
 }
