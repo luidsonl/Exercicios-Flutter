@@ -1,4 +1,4 @@
-class Transaction {
+class CashTransaction {
   final int id;
   final String title;
   final String description;
@@ -6,7 +6,7 @@ class Transaction {
   final DateTime date;
   final String category;
 
-  Transaction({
+  CashTransaction({
     required this.id,
     required this.description,
     required this.title,
@@ -23,11 +23,12 @@ class Transaction {
         'category': category,
       };
 
-  factory Transaction.fromString(Map<String, dynamic> value) => Transaction(
-      id: value['id'],
-      title: value['title'],
-      description: value['description'],
-      amount: value['amount'],
-      date: value['date'],
-      category: value['category']);
+  factory CashTransaction.fromString(Map<String, dynamic> value) =>
+      CashTransaction(
+          id: value['id'],
+          title: value['title'],
+          description: value['description'],
+          amount: value['amount'],
+          date: value['date'],
+          category: value['category']);
 }

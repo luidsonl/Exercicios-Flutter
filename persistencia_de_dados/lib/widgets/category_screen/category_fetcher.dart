@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:persistencia_de_dados/providers/database_provider.dart';
+import 'package:persistencia_de_dados/widgets/category_screen/category_list.dart';
 import 'package:provider/provider.dart';
 
 class CategoryFetcher extends StatefulWidget {
@@ -32,14 +33,7 @@ class _CategoryFetcherState extends State<CategoryFetcher> {
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           } else {
-            return Consumer<DatabaseProvider>(builder: (_, db, __) {
-              var list = db.categories;
-              return ListView.builder(
-                  itemCount: list.length,
-                  itemBuilder: (_, i) => ListTile(
-                        title: Text(list[i].title),
-                      ));
-            });
+            return const CategoryList();
           }
         } else {
           return const Center(child: CircularProgressIndicator());

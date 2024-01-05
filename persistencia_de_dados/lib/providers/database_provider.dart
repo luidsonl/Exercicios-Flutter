@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:persistencia_de_dados/models/transaction_category.dart';
+import 'package:persistencia_de_dados/models/cash_transaction.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseProvider with ChangeNotifier {
   List<TransactionCategory> _categories = [];
   List<TransactionCategory> get categories => _categories;
+
+  final List<CashTransaction> _transactions = [];
+  List<CashTransaction> get transactions => _transactions;
 
   Database? _database;
 
@@ -27,7 +31,7 @@ class DatabaseProvider with ChangeNotifier {
     await db.transaction((txn) async {
       await txn.execute('''CREATE TABLE $cTable(
           title TEXT,
-          isExpense BOOL,
+          isExpense INTEGER,
           entries INTEGER,
           totalAmount Text
         )''');
@@ -35,23 +39,16 @@ class DatabaseProvider with ChangeNotifier {
       await txn.execute('''CREATE TABLE $tTable(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         title TEXT,
+        description Text,
         amount TEXT,
         date TEXT,
         category TEXT
       )''');
 
-      await txn.insert(cTable, {
-        'title': 'Entrada',
-        'isExpense': false,
-        'entries': 0,
-        'totalAmount': 0
-      });
-      await txn.insert(cTable, {
-        'title': 'Saída',
-        'isExpense': true,
-        'entries': 0,
-        'totalAmount': 0
-      });
+      await txn.insert(cTable,
+          {'title': 'Entrada', 'isExpense': 0, 'entries': 0, 'totalAmount': 0});
+      await txn.insert(cTable,
+          {'title': 'Saída', 'isExpense': 1, 'entries': 0, 'totalAmount': 0});
     });
   }
 
@@ -67,5 +64,70 @@ class DatabaseProvider with ChangeNotifier {
         return _categories;
       });
     });
+  }
+
+  Future<void> updateCategory(
+      String category, int nEntries, double nTotalAmount) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      await txn
+          .update(
+        cTable,
+        {
+          'entries': nEntries,
+          'totalAmount': nTotalAmount,
+        },
+        where: "title == ?",
+        whereArgs: [category],
+      )
+          .then((_) {
+        var file =
+            _categories.firstWhere((element) => element.title == category);
+        file.entries = nEntries;
+        file.totalAmount = nTotalAmount;
+
+        notifyListeners();
+      });
+    });
+  }
+
+  Future<void> addTransaction(CashTransaction transaction) async {
+    final db = await database;
+    await db.transaction((txn) async {
+      await txn
+          .insert(
+        tTable,
+        transaction.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace,
+      )
+          .then((generatedId) {
+        final file = CashTransaction(
+            id: generatedId,
+            description: transaction.description,
+            title: transaction.title,
+            amount: transaction.amount,
+            date: transaction.date,
+            category: transaction.category);
+
+        _transactions.add(file);
+        notifyListeners();
+
+        var data = calculateEntriesAndAmount(transaction.category);
+
+        updateCategory(
+            transaction.category, data['entries'], data['totalAmount']);
+      });
+    });
+  }
+
+  Map<String, dynamic> calculateEntriesAndAmount(String category) {
+    double total = 0.0;
+    var list =
+        _transactions.where((element) => element.category == category).toList();
+
+    for (final i in list) {
+      total += i.amount;
+    }
+    return {'entries': list.length, 'totalAmount': total};
   }
 }
