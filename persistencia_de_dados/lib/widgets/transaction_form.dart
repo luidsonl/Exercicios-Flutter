@@ -86,6 +86,7 @@ class _TransactionFormState extends State<TransactionForm> {
           TextField(
             controller: _amount,
             decoration: const InputDecoration(label: Text('Valor')),
+            keyboardType: TextInputType.number,
           ),
           Row(
             children: [

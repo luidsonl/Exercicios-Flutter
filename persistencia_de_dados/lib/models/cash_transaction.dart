@@ -28,7 +28,7 @@ class CashTransaction {
           id: value['id'],
           title: value['title'],
           description: value['description'],
-          amount: value['amount'],
-          date: value['date'],
+          amount: double.parse(value['amount']),
+          date: DateTime.parse(value['date']),
           category: value['category']);
 }

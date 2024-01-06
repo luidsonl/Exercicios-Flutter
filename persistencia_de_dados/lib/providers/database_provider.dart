@@ -8,7 +8,7 @@ class DatabaseProvider with ChangeNotifier {
   List<TransactionCategory> _categories = [];
   List<TransactionCategory> get categories => _categories;
 
-  final List<CashTransaction> _transactions = [];
+  List<CashTransaction> _transactions = [];
   List<CashTransaction> get transactions => _transactions;
 
   Database? _database;
@@ -62,6 +62,20 @@ class DatabaseProvider with ChangeNotifier {
 
         _categories = nList;
         return _categories;
+      });
+    });
+  }
+
+  Future<List<CashTransaction>> fetchTransactions() async {
+    final db = await database;
+    return await db.transaction((txn) async {
+      return await txn.query(tTable).then((data) {
+        final converted = List<Map<String, dynamic>>.from(data);
+        List<CashTransaction> nList = List.generate(converted.length,
+            (index) => CashTransaction.fromString(converted[index]));
+
+        _transactions = nList;
+        return _transactions;
       });
     });
   }

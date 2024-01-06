@@ -15,6 +15,7 @@ class _CategoryFetcherState extends State<CategoryFetcher> {
 
   Future _getCategoryList() async {
     final provider = Provider.of<DatabaseProvider>(context, listen: false);
+    provider.fetchTransactions();
     return await provider.fetchCategories();
   }
 
