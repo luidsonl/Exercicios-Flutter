@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:persistencia_de_dados/screens/transaction_screen.dart';
 import '../../models/transaction_category.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -8,6 +9,10 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onTap: () {
+        Navigator.of(context)
+            .pushNamed(TransactionScreen.name, arguments: category.title);
+      },
       title: Text(category.title),
       subtitle: Text('Contagem: ${category.entries}'),
       leading: Padding(

@@ -41,7 +41,7 @@ class DatabaseProvider with ChangeNotifier {
         title TEXT,
         description Text,
         amount TEXT,
-        date TEXT,
+        date INTEGER,
         category TEXT
       )''');
 
@@ -66,10 +66,29 @@ class DatabaseProvider with ChangeNotifier {
     });
   }
 
-  Future<List<CashTransaction>> fetchTransactions() async {
+  Future<List<CashTransaction>> fetchTransactions(
+      {DateTime? startDate, DateTime? endDate, String? category}) async {
+    String whereQuery = '';
+    List<String> whereQueryArgs = [];
+
+    if (startDate != null) {
+      whereQuery += ' AND date >= ?';
+      whereQueryArgs.add(startDate.toString());
+    }
+    if (endDate != null) {
+      whereQuery += ' AND date <= ?';
+      whereQueryArgs.add(endDate.toString());
+    }
+    if (category != null) {
+      whereQuery += ' AND category = ?';
+      whereQueryArgs.add(category);
+    }
+
     final db = await database;
     return await db.transaction((txn) async {
-      return await txn.query(tTable).then((data) {
+      return await txn
+          .query(tTable, where: '1 == 1 $whereQuery', whereArgs: whereQueryArgs)
+          .then((data) {
         final converted = List<Map<String, dynamic>>.from(data);
         List<CashTransaction> nList = List.generate(converted.length,
             (index) => CashTransaction.fromString(converted[index]));

@@ -19,7 +19,7 @@ class CashTransaction {
         'title': title,
         'description': description,
         'amount': amount.toString(),
-        'date': date.toString(),
+        'date': date.millisecondsSinceEpoch,
         'category': category,
       };
 
@@ -29,6 +29,6 @@ class CashTransaction {
           title: value['title'],
           description: value['description'],
           amount: double.parse(value['amount']),
-          date: DateTime.parse(value['date']),
+          date: DateTime.fromMillisecondsSinceEpoch(value['date']),
           category: value['category']);
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:persistencia_de_dados/providers/database_provider.dart';
 import 'package:persistencia_de_dados/screens/category_screen.dart';
+import 'package:persistencia_de_dados/screens/transaction_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -18,7 +19,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       initialRoute: CategoryScreen.name,
-      routes: {CategoryScreen.name: (_) => const CategoryScreen()},
+      routes: {
+        CategoryScreen.name: (_) => const CategoryScreen(),
+        TransactionScreen.name: (_) => const TransactionScreen()
+      },
     );
   }
 }
