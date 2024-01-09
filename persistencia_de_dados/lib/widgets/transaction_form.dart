@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
 import '../models/cash_transaction.dart';
 import '../providers/database_provider.dart';
 
@@ -91,8 +91,9 @@ class _TransactionFormState extends State<TransactionForm> {
           Row(
             children: [
               Expanded(
-                  child: Text(
-                      _date != null ? _date.toString() : 'Data da transação')),
+                  child: Text(_date != null
+                      ? DateFormat('dd/MM/yyyy').format(_date!)
+                      : 'Data da transação')),
               IconButton(
                   onPressed: _pickDate, icon: const Icon(Icons.calendar_month))
             ],

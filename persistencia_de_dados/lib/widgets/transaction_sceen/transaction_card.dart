@@ -11,8 +11,8 @@ class TransactionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: ThemeData(
-        textTheme: const TextTheme(bodyMedium: TextStyle(height: 2)),
-      ),
+          //textTheme: const TextTheme(bodyMedium: TextStyle(height: 2)),
+          ),
       child: ListTile(
         contentPadding: const EdgeInsets.all(20),
         title: Text(
@@ -24,11 +24,17 @@ class TransactionCard extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(
+              height: 10,
+            ),
             const Text(
               'Descrição: ',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(transaction.description),
+            const SizedBox(
+              height: 10,
+            ),
             Row(
               children: [
                 const Text(
@@ -45,7 +51,7 @@ class TransactionCard extends StatelessWidget {
             ),
           ],
         ),
-        trailing: Text('${transaction.amount.toString()} R\$'),
+        trailing: Text('${transaction.amount.toStringAsFixed(2)} R\$'),
       ),
     );
   }

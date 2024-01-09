@@ -31,7 +31,7 @@ class DatabaseProvider with ChangeNotifier {
     await db.transaction((txn) async {
       await txn.execute('''CREATE TABLE $cTable(
           title TEXT,
-          isExpense INTEGER,
+          sign INTEGER,
           entries INTEGER,
           totalAmount Text
         )''');
@@ -46,9 +46,9 @@ class DatabaseProvider with ChangeNotifier {
       )''');
 
       await txn.insert(cTable,
-          {'title': 'Entrada', 'isExpense': 0, 'entries': 0, 'totalAmount': 0});
+          {'title': 'Entrada', 'sign': 1, 'entries': 0, 'totalAmount': 0});
       await txn.insert(cTable,
-          {'title': 'Saída', 'isExpense': 1, 'entries': 0, 'totalAmount': 0});
+          {'title': 'Saída', 'sign': -1, 'entries': 0, 'totalAmount': 0});
     });
   }
 
