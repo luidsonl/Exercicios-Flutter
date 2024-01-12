@@ -10,6 +10,7 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<DatabaseProvider>(builder: (_, db, __) {
       var transactionList = db.transactions;
+      transactionList.sort((a, b) => b.date.compareTo(a.date));
       return ListView.builder(
           itemCount: transactionList.length,
           itemBuilder: (_, i) => TransactionCard(transactionList[i]));

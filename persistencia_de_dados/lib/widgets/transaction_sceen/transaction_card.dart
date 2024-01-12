@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../models/cash_transaction.dart';
+import 'confirm_box.dart';
 
 class TransactionCard extends StatelessWidget {
   final CashTransaction transaction;
@@ -9,10 +10,14 @@ class TransactionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      data: ThemeData(
-          //textTheme: const TextTheme(bodyMedium: TextStyle(height: 2)),
-          ),
+    return Dismissible(
+      key: ValueKey(transaction.id),
+      confirmDismiss: (_) async {
+        showDialog(
+            context: context,
+            builder: (_) => ConfirmBox(transaction: transaction));
+        return null;
+      },
       child: ListTile(
         contentPadding: const EdgeInsets.all(20),
         title: Text(

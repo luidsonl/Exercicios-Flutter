@@ -99,6 +99,21 @@ class DatabaseProvider with ChangeNotifier {
     });
   }
 
+  Future<CashTransaction> fetchSingleTransacton(int id) async {
+    final db = await database;
+
+    return await db.transaction((txn) async {
+      return await txn
+          .query(tTable, where: 'id = ?', whereArgs: [id]).then((data) {
+        final converted = List<Map<String, dynamic>>.from(data);
+        List<CashTransaction> nList = List.generate(converted.length,
+            (index) => CashTransaction.fromString(converted[index]));
+
+        return nList[0];
+      });
+    });
+  }
+
   Future<void> updateCategory(
       String category, int nEntries, double nTotalAmount) async {
     final db = await database;
@@ -143,18 +158,37 @@ class DatabaseProvider with ChangeNotifier {
             category: transaction.category);
 
         _transactions.add(file);
-        notifyListeners();
 
         var data = calculateEntriesAndAmount(transaction.category);
 
         updateCategory(
             transaction.category, data['entries'], data['totalAmount']);
+        notifyListeners();
       });
     });
   }
 
+  Future<void> deleteTransaction(int transactionId) async {
+    final CashTransaction transaction =
+        await fetchSingleTransacton(transactionId);
+    final db = await database;
+
+    await db.transaction((txn) async {
+      await txn.delete(tTable,
+          where: 'id == ?', whereArgs: [transactionId]).then((_) {
+        _transactions.removeWhere((element) => element.id == transactionId);
+        notifyListeners();
+      });
+    });
+
+    final newCategoryData = calculateEntriesAndAmount(transaction.category);
+    updateCategory(transaction.category, newCategoryData['entries'],
+        newCategoryData['totalAmount']);
+  }
+
   Map<String, dynamic> calculateEntriesAndAmount(String category) {
     double total = 0.0;
+
     var list =
         _transactions.where((element) => element.category == category).toList();
 

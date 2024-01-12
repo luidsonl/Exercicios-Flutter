@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../models/cash_transaction.dart';
@@ -79,7 +80,6 @@ class _TransactionFormState extends State<TransactionForm> {
             decoration: const InputDecoration(label: Text('Título')),
           ),
           TextField(
-            maxLines: 2,
             controller: _description,
             decoration: const InputDecoration(label: Text('Descrição')),
           ),
@@ -87,6 +87,9 @@ class _TransactionFormState extends State<TransactionForm> {
             controller: _amount,
             decoration: const InputDecoration(label: Text('Valor')),
             keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'^\d+([\.,]\d{0,2})?')),
+            ],
           ),
           Row(
             children: [
@@ -106,7 +109,7 @@ class _TransactionFormState extends State<TransactionForm> {
                     id: 0,
                     description: _description.text,
                     title: _title.text,
-                    amount: double.parse(_amount.text),
+                    amount: double.parse(_amount.text.replaceAll(',', '.')),
                     date: _date != null ? _date! : DateTime.now(),
                     category: _category);
 
